@@ -24,6 +24,10 @@ if !exists('g:gh_line_blame_map_default')
     let g:gh_line_blame_map_default = 1
 endif
 
+if !exists('g:gh_mode')
+  let g:gh_mode = 'open'
+endif
+
 if !exists('g:gh_open_command')
     if has('win16') || has('win32') || has('win64')
         let g:gh_open_command = 'start '
@@ -153,7 +157,11 @@ func! s:gh_line(action, force_interactive) range
             \ 'one of the supported git hosting environments: ' .
             \ 'GitHub, GitLab, BitBucket, SourceHut, Cgit.'
     endif
-    call s:gh_exec_cmd(url)
+    if g:gh_mode == 'open'
+      call s:gh_exec_cmd(url)
+    elseif g:gh_mode == 'copy'
+      let @+=url
+    endif
 endfun
 
 func! s:gh_repo() range
